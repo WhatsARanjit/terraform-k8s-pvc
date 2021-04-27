@@ -1,0 +1,9 @@
+terraform {
+  backend "remote" {
+    organization = "<YOUR ORGANIZATION>"
+
+    workspaces {
+     name = "k8s-cluster"
+    }
+  }
+}
