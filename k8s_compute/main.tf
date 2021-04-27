@@ -1,13 +1,7 @@
-resource "kubernetes_namespace" "my_app" {
-  metadata {
-    name = "my-app"
-  }
-}
-
 resource "kubernetes_deployment" "my_app_deployment" {
   metadata {
     name      = "my-app-deployment"
-    namespace = kubernetes_namespace.my_app.metadata[0].name
+    namespace = "default"
   }
 
   spec {
@@ -36,18 +30,6 @@ resource "kubernetes_deployment" "my_app_deployment" {
               cpu    = "250m"
               memory = "50Mi"
             }
-          }
-          liveness_probe {
-            http_get {
-              path = "/nginx_status"
-              port = 80
-              http_header {
-                name  = "X-Custom-Header"
-                value = "Awesome"
-              }
-            }
-            initial_delay_seconds = 3
-            period_seconds        = 3
           }
           volume_mount {
             mount_path = "/usr/share/my-app"
