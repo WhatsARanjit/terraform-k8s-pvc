@@ -43,3 +43,21 @@ resource "azurerm_kubernetes_cluster" "default" {
     environment = "Demo"
   }
 }
+
+resource "azurerm_key_vault_secret" "k8s_certificate" {
+  name         = "k8s-certificate"
+  value        = azurerm_kubernetes_cluster.default.kube_config.0.client_certificate
+  key_vault_id = azurerm_key_vault.k8s_auth.id
+}
+
+resource "azurerm_key_vault_secret" "k8s_key" {
+  name         = "k8s-key"
+  value        = azurerm_kubernetes_cluster.default.kube_config.0.client_key
+  key_vault_id = azurerm_key_vault.k8s_auth.id
+}
+
+resource "azurerm_key_vault_secret" "k8s_ca_certificate" {
+  name         = "k8s-ca-certificate"
+  value        = azurerm_kubernetes_cluster.default.kube_config.0.cluster_ca_certificate
+  key_vault_id = azurerm_key_vault.k8s_auth.id
+}

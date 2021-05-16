@@ -15,14 +15,24 @@ provider "azurerm" {
   features {}
 }
 
-data "azurerm_kubernetes_cluster" "cluster" {
-  name                = data.terraform_remote_state.aks.outputs.kubernetes_cluster_name
-  resource_group_name = data.terraform_remote_state.aks.outputs.resource_group_name
+data "azurerm_key_vault_secret" "k8s_certificate" {
+  name         = "k8s-certificate"
+  key_vault_id = data.terraform_remote_state.aks.outputs.k8s_key_vault_id
+}
+
+data "azurerm_key_vault_secret" "k8s_key" {
+  name         = "k8s-key"
+  key_vault_id = data.terraform_remote_state.aks.outputs.k8s_key_vault_id
+}
+
+data "azurerm_key_vault_secret" "k8s_ca_certificate" {
+  name         = "k8s-ca-certificate"
+  key_vault_id = data.terraform_remote_state.aks.outputs.k8s_key_vault_id
 }
 
 provider "kubernetes" {
-  host                   = data.azurerm_kubernetes_cluster.cluster.kube_config.0.host
-  client_certificate     = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.client_certificate)
-  client_key             = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.client_key)
-  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.cluster_ca_certificate)
+  host                   = data.terraform_remote_state.aks.outputs.k8s_host
+  client_certificate     = base64decode(data.azurerm_key_vault_secret.k8s_certificate.value)
+  client_key             = base64decode(data.azurerm_key_vault_secret.k8s_key.value)
+  cluster_ca_certificate = base64decode(data.azurerm_key_vault_secret.k8s_ca_certificate.value)
 }

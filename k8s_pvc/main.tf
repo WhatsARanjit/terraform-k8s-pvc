@@ -16,7 +16,7 @@ resource "kubernetes_persistent_volume" "my_storage_class" {
   }
   spec {
     capacity = {
-      storage = "5Gi"
+      storage = "${var.pvc_size}Gi"
     }
     storage_class_name = "default"
     access_modes       = ["ReadWriteOnce"]
