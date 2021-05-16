@@ -1,5 +1,5 @@
 resource "azurerm_managed_disk" "example" {
-  name                 = "example"
+  name                 = "${var.tier}-example"
   location             = data.terraform_remote_state.aks.outputs.resource_group_location
   resource_group_name  = data.terraform_remote_state.aks.outputs.resource_group_name
   storage_account_type = "Standard_LRS"
@@ -12,7 +12,7 @@ resource "azurerm_managed_disk" "example" {
 
 resource "kubernetes_persistent_volume" "my_storage_class" {
   metadata {
-    name = "my-storage-class"
+    name = "${var.tier}-storage-class"
   }
   spec {
     capacity = {
@@ -33,7 +33,7 @@ resource "kubernetes_persistent_volume" "my_storage_class" {
 
 resource "kubernetes_persistent_volume_claim" "my_pod_storage" {
   metadata {
-    name = "my-pod-storage"
+    name = "${var.tier}-pod-storage"
   }
   spec {
     storage_class_name = "default"

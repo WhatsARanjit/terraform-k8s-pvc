@@ -12,3 +12,8 @@ variable "pvc_size" {
   description = "Size of volume in Gi"
   default     = "5"
 }
+
+variable "tier" {
+  description = "Application tier level"
+  default     = "prod"
+}
