@@ -48,11 +48,11 @@ if length(violatingRemoteStates["messages"]) is not 0 {
           "any of the allowed regular expressions in", keys(allowed_workspaces))
   }
   # Print generic violation message
-  print("This k8s compute tried to access remote state from storage",
+  print("This k8s compute tried to access a storage tier",
         "it is not allowed to access.")
   # Print specific violation messages for instances of the terraform_remote_state
   # data source
-  state.print_violations(violatingRemoteStates["messages"], "Data source")
+  state.print_violations(violatingRemoteStates["messages"], "Storage source")
 }
 
 # Main rule
